@@ -1,71 +1,62 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-export const SearcFrom = (props) => {
+export const SearcFrom = ({ newLocation }) => {
   const [search, setSearch] = useState()
 
-  const handleChenge = (e) => {
-    const { name, value } = e.target
-    console.log(name, '=>', value)
-    setSearch(value)
-  }
-
-  const fetchApi = (search) => {
-    const url = `https://community-open-weather-map.p.rapidapi.com/weather?q=${search}&lat=0&lon=0&id=2172797&lang=sp&units=metric&mode=json`
-    const options = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': '92b5e73ee6msh17029a6aab87eaep1114a7jsn995ebdd383a0',
-        'X-RapidAPI-Host': 'community-open-weather-map.p.rapidapi.com',
-      },
-    }
-    fetch(url, options)
-      .then((res) => res.json())
-      .then((json) => console.log(json))
-      .catch((err) => console.error('error:' + err))
-  }
+  const handleChenge = (e) => setSearch(e.target.value)
 
   const searchFetch = (e) => {
     e.preventDefault()
     console.log(search)
-    fetchApi(search)
+    if (search === '' || !search) return
+    newLocation(search)
   }
 
   return (
-    <div>
+    <ContentSearch onSubmit={searchFetch}>
       <Input
         type='text'
         placeholder='insert search'
         onChange={handleChenge}
         name='search'
       />
-      <Button onClick={searchFetch}>Search</Button>
-    </div>
+      <Button type='submit'>Search</Button>
+    </ContentSearch>
   )
 }
 
+const ContentSearch = styled.form`
+  margin: 2rem 1rem 0 1rem;
+  max-height: 3rem;
+  max-width: 90%;
+  width: 30rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
 const Input = styled.input`
-  /* width: 50%; */
-  height: 3rem;
+  width: 70%;
+  height: 100%;
   border: none;
   border-radius: 0.8rem 0 0 0.8rem;
   background-color: #fafafa;
   color: #000;
   font-size: 1.5rem;
   padding: 0.5rem;
-  margin-bottom: 1rem;
 `
 
 const Button = styled.button`
-  width: 8rem;
-  height: 3rem;
+  width: 30%;
+  height: 100%;
   border: none;
   border-radius: 0 0.8rem 0.8rem 0;
   background-color: #fafafacc;
   color: #444;
   font-size: 1.5rem;
   padding: 0.5rem;
-  margin-bottom: 1rem;
   cursor: pointer;
   &:hover {
     background-color: #f5f5;
